@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Multi-Cipher Converter</title>
+  <link rel="stylesheet" href="style.css"/>
+  <link href="https://fonts.googleapis.com/css2?family=VT323&family=Share+Tech+Mono&display=swap" rel="stylesheet"/>
+</head>
+<body>
+
+  <!-- Scanline overlay for CRT effect -->
+  <div class="scanlines"></div>
+
+  <div class="container">
+
+    <!-- Header -->
+    <header class="header">
+      <div class="header-badge">[ CLASSIFIED ]</div>
+      <h1 class="title">MULTI-CIPHER<br/><span class="title-accent">CONVERTER</span></h1>
+      <p class="subtitle">// Real-time message encryption &amp; decryption terminal</p>
+    </header>
+
+    <!-- Mode Toggle -->
+    <div class="mode-bar">
+      <button class="mode-btn active" id="btn-encode" onclick="setMode('encode')">▶ ENCODE</button>
+      <div class="mode-divider">|</div>
+      <button class="mode-btn" id="btn-decode" onclick="setMode('decode')">◀ DECODE</button>
+      <div class="mode-indicator" id="mode-indicator">MODE: ENCODING</div>
+    </div>
+
+    <!-- Main Grid -->
+    <div class="main-grid">
+
+      <!-- LEFT: Input -->
+      <section class="panel" id="input-panel">
+        <div class="panel-label">
+          <span class="dot"></span> INPUT_MESSAGE.txt
+        </div>
+        <textarea
+          id="input-text"
+          class="terminal-area"
+          placeholder="Type your message here..."
+          oninput="processText()"
+          spellcheck="false"
+        ></textarea>
+        <div class="char-count"><span id="char-count">0</span> CHARS</div>
+      </section>
+
+      <!-- CENTER: Controls -->
+      <section class="controls-panel">
+
+        <!-- Cipher Selector -->
+        <div class="control-group">
+          <label class="control-label">SELECT CIPHER</label>
+          <div class="cipher-options">
+
+            <label class="cipher-card" id="card-caesar">
+              <input type="radio" name="cipher" value="caesar" checked onchange="onCipherChange()"/>
+              <div class="cipher-card-inner">
+                <div class="cipher-icon">⇄</div>
+                <div class="cipher-name">CAESAR</div>
+                <div class="cipher-desc">Shifts each letter by N positions</div>
+              </div>
+            </label>
+
+            <label class="cipher-card" id="card-rot13">
+              <input type="radio" name="cipher" value="rot13" onchange="onCipherChange()"/>
+              <div class="cipher-card-inner">
+                <div class="cipher-icon">↺</div>
+                <div class="cipher-name">ROT13</div>
+                <div class="cipher-desc">Caesar with fixed shift of 13</div>
+              </div>
+            </label>
+
+            <label class="cipher-card" id="card-base64">
+              <input type="radio" name="cipher" value="base64" onchange="onCipherChange()"/>
+              <div class="cipher-card-inner">
+                <div class="cipher-icon">01</div>
+                <div class="cipher-name">BASE64</div>
+                <div class="cipher-desc">Binary-to-text encoding scheme</div>
+              </div>
+            </label>
+
+            <label class="cipher-card" id="card-substitution">
+              <input type="radio" name="cipher" value="substitution" onchange="onCipherChange()"/>
+              <div class="cipher-card-inner">
+                <div class="cipher-icon">A→Z</div>
+                <div class="cipher-name">SUBSTITUTION</div>
+                <div class="cipher-desc">Replaces letters via fixed map</div>
+              </div>
+            </label>
+
+          </div>
+        </div>
+
+        <!-- Caesar Shift Control -->
+        <div class="control-group" id="shift-control">
+          <label class="control-label">SHIFT VALUE</label>
+          <div class="shift-row">
+            <button class="shift-btn" onclick="adjustShift(-1)">−</button>
+            <input
+              type="number"
+              id="shift-input"
+              class="shift-input"
+              value="3"
+              min="1"
+              max="25"
+              oninput="processText()"
+            />
+            <button class="shift-btn" onclick="adjustShift(1)">+</button>
+          </div>
+        </div>
+
+        <!-- Swap Button -->
+        <button class="process-btn" onclick="swapIO()" id="swap-btn" title="Move output back to input">
+          ⇄ SWAP I/O
+        </button>
+
+        <!-- Copy Button -->
+        <button class="copy-btn" onclick="copyOutput()" id="copy-btn">
+          ⎘ COPY OUTPUT
+        </button>
+
+        <!-- Clear Button -->
+        <button class="clear-btn" onclick="clearAll()">✕ CLEAR ALL</button>
+
+      </section>
+
+      <!-- RIGHT: Output -->
+      <section class="panel" id="output-panel">
+        <div class="panel-label">
+          <span class="dot dot-green"></span><span id="output-label"> OUTPUT_ENCRYPTED.txt</span>
+        </div>
+        <div class="terminal-area output-area" id="output-text">
+          <span class="placeholder-text">Encrypted output will appear here...</span>
+        </div>
+        <div class="status-bar" id="status-bar">READY</div>
+      </section>
+
+    </div>
+
+    <!-- Cipher Info Banner -->
+    <div class="info-banner" id="cipher-info">
+      <span class="info-icon">ℹ</span>
+      <span id="info-text">Caesar Cipher: Each letter is shifted forward by the specified number of positions in the alphabet. Non-alphabetic characters remain unchanged.</span>
+    </div>
+
+    <!-- Disclaimer -->
+    <footer class="disclaimer">
+      <div class="disclaimer-line"></div>
+      ⚠ This tool demonstrates basic encryption techniques. These methods are <strong>NOT SECURE</strong> for real-world use. For actual security, use AES-256 or RSA encryption.
+    </footer>
+
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
